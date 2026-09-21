@@ -4,7 +4,7 @@ import concurrent.futures
 import threading
 import re
 
-# Criamos o "bastão da fala" para o banco de dados
+
 lock_banco = threading.Lock()
 
 def processar_linha(linha):
@@ -16,7 +16,7 @@ def processar_linha(linha):
     if not linha:
         return
 
-    # Limpeza do texto com Regex
+
     if re.match(r'^\d+\.', linha):
         nome_sem_rank = re.sub(r'^\d+\.\s*', '', linha)
         nome_limpo = re.split(r'\s{2,}', nome_sem_rank)[0]
@@ -32,16 +32,16 @@ def processar_linha(linha):
     resultado = buscar_por_nome(nome_limpo)
     
     if type(resultado) is dict:
-        # A MÁGICA AQUI: O operário pede permissão (pega o bastão) para escrever no banco
+       
         with lock_banco:
             adicionar_jogo(resultado["id"], resultado["Titulo"], resultado["Valor"])
-        print(f"✅ {resultado['Titulo']} adicionado com sucesso!\n")
+        print(f" {resultado['Titulo']} adicionado com sucesso!\n")
     else:
-        print(f"❌ Falha ao carregar o jogo: {nome_limpo}\n")
+        print(f" Falha ao carregar o jogo: {nome_limpo}\n")
 
 
 def populardb():
-    # 1. Lemos o arquivo inteiro de uma vez
+
     with open("lista.txt", "r", encoding="utf-8") as arquivo:
         linhas = arquivo.readlines()
         
@@ -49,16 +49,14 @@ def populardb():
         print(" ERRO: O arquivo lista.txt está VAZIO! Você esqueceu de dar Ctrl+S no VS Code?")
         return
 
-    print(f"🚀 Iniciando processamento de {len(linhas)} linhas usando processamento paralelo...")
+    print(f" Iniciando processamento de {len(linhas)} linhas usando processamento paralelo...")
 
-    # 2. Criamos uma equipe de 5 operários (threads)
-    # Não coloque um número muito alto (como 50), senão a Steam percebe e dá ban.
+   
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
-        # O executor.map divide a sua lista entre os operários automaticamente
+   
         executor.map(processar_linha, linhas)
 
-    print("🏁 Processo Terminado! A fila de jogos foi concluída.")
+    print(" Processo Terminado! A fila de jogos foi concluída.")
 
-# Para rodar o arquivo
 if __name__ == "__main__":
     populardb()
