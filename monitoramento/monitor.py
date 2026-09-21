@@ -79,14 +79,14 @@ def _processar_jogo(id_salvo, nome_salvo, preco_banco):
 
     else:
         print(
-            f"ℹ️ {nome_salvo}: Preço estável (Hoje: R$ {valor_limpo} | Preco Atual: R$ {preco_banco_num})"
+            f" {nome_salvo}: Preço estável (Hoje: R$ {valor_limpo} | Preco Atual: R$ {preco_banco_num})"
         )
 
 
 def verifica_promocoes():
-    print("🚀 [DEBUG] Iniciando varredura da base de jogos...")
+    print(" [DEBUG] Iniciando varredura da base de jogos...")
     lista_banco = listar_jogos_monitorados()
-    print(f"📊 Total de jogos carregados do banco: {len(lista_banco)}")
+    print(f" Total de jogos carregados do banco: {len(lista_banco)}")
 
     executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
     futuros = {
@@ -102,7 +102,7 @@ def verifica_promocoes():
             except Exception as e:
                 salvar_logs(f"Erro ao processar {nome_salvo}: {e}")
     except KeyboardInterrupt:
-        print("\n⏹️  Interrompido pelo usuário. Cancelando tarefas pendentes...")
+        print("\n  Interrompido pelo usuário. Cancelando tarefas pendentes...")
         executor.shutdown(wait=False, cancel_futures=True)
         raise
     finally:
