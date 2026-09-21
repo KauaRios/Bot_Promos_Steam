@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database files
+*.db
+promocoes.db
+
+# Environment variables
+.env
+
+# Logs
+logs_erros/erros.log
+
+# Configuration (if it contains sensitive data)
+config.py
+
+# Notifications and monitoramento directories (may contain runtime data)
+
+
+# Temporary files
+*.tmp
