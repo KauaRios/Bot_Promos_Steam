@@ -3,19 +3,18 @@ import requests
 import threading
 import time
 
-# Sessão reaproveitada entre todas as chamadas — evita reabrir conexão TCP/TLS
+
 # a cada requisição (economiza tempo em varreduras com muitos jogos)
 _sessao = requests.Session()
 
-# --- Estado compartilhado entre todas as threads --------------------------
 _lock_estado = threading.Lock()
 _ultima_requisicao = 0.0
 _falhas_consecutivas = 0
-_bloqueado_ate = 0.0  # timestamp (time.monotonic) até quando pausar tudo
+_bloqueado_ate = 0.0  
 
-_INTERVALO_MINIMO = 1.5         # ritmo normal entre requisições (~1,6/s no total)
-_MAX_FALHAS_CONSECUTIVAS = 5      # quantos 429 seguidos indicam bloqueio de IP, não só azar
-_PAUSA_CIRCUITO = 120             # segundos de pausa total quando o disjuntor "abre"
+_INTERVALO_MINIMO = 1.5         
+_MAX_FALHAS_CONSECUTIVAS = 5      
+_PAUSA_CIRCUITO = 120             
 
 
 def _aguardar_intervalo():
@@ -91,7 +90,7 @@ def buscar_promo_st(id_jogo, sessao=_sessao, tentativas=3):
             elif resposta.status_code == 429:
                 _registrar_resultado(sucesso=False)
 
-                # Se a Steam disser quanto tempo esperar, usa isso em vez do backoff genérico
+              
                 retry_after = resposta.headers.get("Retry-After")
                 if retry_after:
                     try:
@@ -106,7 +105,7 @@ def buscar_promo_st(id_jogo, sessao=_sessao, tentativas=3):
                     f"Esperando {espera}s antes de tentar de novo."
                 )
                 time.sleep(espera)
-                continue  # tenta de novo, não desiste do jogo ainda
+                continue  
 
             else:
                 _registrar_resultado(sucesso=False)
@@ -126,7 +125,7 @@ def buscar_promo_st(id_jogo, sessao=_sessao, tentativas=3):
             salvar_logs(f"Ocorreu um erro ao buscar preço do jogo {id_jogo}: {e}")
             return None
 
-    # Esgotou as tentativas de retry — aí sim desiste, mas com log claro do motivo
+   
     salvar_logs(f"Esgotadas as tentativas para o jogo {id_jogo} (rate limit persistente)")
     return None
 
